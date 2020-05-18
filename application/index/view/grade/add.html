@@ -1,0 +1,98 @@
+{extend name='public/base'/}
+
+{block name='content'}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i><a href="/index/index">首页</a>
+		<span class="c-gray en">&gt;</span>
+		<a href="/grade/list">班级管理</a>
+		<span class="c-gray en">&gt;</span>
+		添加班级
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+			href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+
+			<form action="" method="post" class="form form-horizontal" id="form-grade-add">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>班级：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学制：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" autocomplete="off" value="" placeholder="学制" id="length"
+							name="length">
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学费：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" placeholder="学费" name="price" id="price" value="">
+					</div>
+				</div>
+
+				<!--添加时只可添加本表信息，关联表不可添加-->
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">启用状态：</label>
+					<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+							<select class="select" name="status" size="1">
+								<option value="1" selected>启用</option>
+								<option value="0">不启用</option>
+							</select>
+						</span>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;"
+							id="submit">
+					</div>
+				</div>
+			</form>
+
+		</article>
+	</div>
+</section>
+{/block}
+
+{block name='js'}
+<!--请在下方写此页面业务相关的脚本-->
+{load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"}
+<script>
+	$(function () {
+		// 当用户修改了输入框内容时才触发
+		$("form").children().change(function () {
+			$("#submit").removeClass('disabled');
+		});
+
+		// ajax方式提交当前表单数据
+		$("#submit").on("click", function (event) {
+			$.ajax({
+				type: "POST",
+				url: "/grade/checkAdd",
+				data: $("#form-grade-add").serialize(),
+				dataType: "json",
+				success: function (data) {
+					if (data.status == 1) {
+						layer.msg(data.message, {
+							time: 1000
+						});
+					} else {
+						layer.msg(data.message, {
+							time: 1000
+						});
+					}
+				}
+			});
+		});
+	});
+</script>
+{/block}
